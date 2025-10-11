@@ -23,15 +23,47 @@ const initialFishes = [
 
 export class ClassGameBoard extends Component {
   render() {
-    const nextFishToName = initialFishes[0];
+    const { setGameState, fishIndex, choice } = this.props;
+    const currentFish = initialFishes[fishIndex];
+
+    const handleSubmit = (answer) => {
+      const isCorrect = answer === currentFish.name;
+      setGameState((prev) => ({
+        ...prev,
+        fishIndex: prev.fishIndex + 1,
+        answersLeft: prev.answersLeft.slice(1),
+        points: {
+          ...prev.points,
+          correct: isCorrect ? prev.points.correct + 1 : prev.points.correct,
+          incorrect: !isCorrect
+            ? prev.points.incorrect + 1
+            : prev.points.incorrect,
+        },
+        choice: "",
+      }));
+    };
+
     return (
       <div id="game-board">
         <div id="fish-container">
-          <img src={nextFishToName.url} alt={nextFishToName.name} />
+          <img src={currentFish.url} alt={currentFish.name} />
         </div>
-        <form id="fish-guess-form">
+        <form
+          id="fish-guess-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit(choice);
+          }}
+        >
           <label htmlFor="fish-guess">What kind of fish is this?</label>
-          <input type="text" name="fish-guess" />
+          <input
+            type="text"
+            name="fish-guess"
+            value={choice}
+            onChange={(e) => {
+              setGameState((prev) => ({ ...prev, choice: e.target.value }));
+            }}
+          />
           <input type="submit" />
         </form>
       </div>
