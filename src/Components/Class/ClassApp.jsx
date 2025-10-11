@@ -2,11 +2,12 @@ import { Component } from "react";
 import { ClassScoreBoard } from "./ClassScoreBoard";
 import { ClassGameBoard } from "./ClassGameBoard";
 import { ClassFinalScore } from "./ClassFinalScore";
+import { initialFishes } from "../../data/data";
 
 export class ClassApp extends Component {
   state = {
     fishIndex: 0,
-    answersLeft: ["trout", "salmon", "tuna", "shark"],
+    answersLeft: initialFishes,
     points: { correct: 0, incorrect: 0 },
     choice: "",
   };
@@ -14,7 +15,7 @@ export class ClassApp extends Component {
     const { fishIndex, answersLeft, points, choice } = this.state;
     return (
       <>
-        {points.correct + points.incorrect === 4 ? (
+        {fishIndex === initialFishes.length ? (
           <ClassFinalScore points={points} />
         ) : (
           <>

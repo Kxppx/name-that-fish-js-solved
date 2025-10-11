@@ -23,7 +23,7 @@ const initialFishes = [
 export function FunctionalGameBoard({ setGameState, fishIndex, choice }) {
   const currentFish = initialFishes[fishIndex];
 
-  const handleSubmit = (answer, currentFish) => {
+  const handleSubmit = (answer) => {
     const isCorrect = answer === currentFish.name;
     setGameState((prev) => ({
       ...prev,
@@ -49,7 +49,7 @@ export function FunctionalGameBoard({ setGameState, fishIndex, choice }) {
         id="fish-guess-form"
         onSubmit={(e) => {
           e.preventDefault();
-          handleSubmit(choice, currentFish);
+          handleSubmit(choice);
         }}
       >
         <label htmlFor="fish-guess">What kind of fish is this?</label>
