@@ -1,37 +1,20 @@
 import { Component } from "react";
+import { initialFishes } from "../../constants/fish-data";
 import "./styles/game-board.css";
-import { Images } from "../../assets/Images";
-
-const initialFishes = [
-  {
-    name: "trout",
-    url: Images.trout,
-  },
-  {
-    name: "salmon",
-    url: Images.salmon,
-  },
-  {
-    name: "tuna",
-    url: Images.tuna,
-  },
-  {
-    name: "shark",
-    url: Images.shark,
-  },
-];
 
 export class ClassGameBoard extends Component {
+  state = {
+    input: "",
+  };
   render() {
-    const { setGameState, fishIndex, choice } = this.props;
+    const { setGameState, fishIndex } = this.props;
+    const { input } = this.state;
     const currentFish = initialFishes[fishIndex];
 
     const handleSubmit = (answer) => {
       const isCorrect = answer === currentFish.name;
       setGameState((prev) => ({
         ...prev,
-        fishIndex: prev.fishIndex + 1,
-        answersLeft: prev.answersLeft.slice(1),
         points: {
           ...prev.points,
           correct: isCorrect ? prev.points.correct + 1 : prev.points.correct,
@@ -39,8 +22,8 @@ export class ClassGameBoard extends Component {
             ? prev.points.incorrect + 1
             : prev.points.incorrect,
         },
-        choice: "",
       }));
+      this.setState({ input: "" });
     };
 
     return (
@@ -52,16 +35,16 @@ export class ClassGameBoard extends Component {
           id="fish-guess-form"
           onSubmit={(e) => {
             e.preventDefault();
-            handleSubmit(choice);
+            handleSubmit(input);
           }}
         >
           <label htmlFor="fish-guess">What kind of fish is this?</label>
           <input
             type="text"
             name="fish-guess"
-            value={choice}
+            value={input}
             onChange={(e) => {
-              setGameState((prev) => ({ ...prev, choice: e.target.value }));
+              this.setState({ input: e.target.value });
             }}
           />
           <input type="submit" />

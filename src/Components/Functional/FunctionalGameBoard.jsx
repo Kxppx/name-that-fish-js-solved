@@ -1,34 +1,15 @@
+import { useState } from "react";
+import { initialFishes } from "../../constants/fish-data";
 import "./styles/game-board.css";
-import { Images } from "../../assets/Images";
 
-const initialFishes = [
-  {
-    name: "trout",
-    url: Images.trout,
-  },
-  {
-    name: "salmon",
-    url: Images.salmon,
-  },
-  {
-    name: "tuna",
-    url: Images.tuna,
-  },
-  {
-    name: "shark",
-    url: Images.shark,
-  },
-];
-
-export function FunctionalGameBoard({ setGameState, fishIndex, choice }) {
+export function FunctionalGameBoard({ setGameState, fishIndex }) {
+  const [input, setInput] = useState("");
   const currentFish = initialFishes[fishIndex];
 
   const handleSubmit = (answer) => {
     const isCorrect = answer === currentFish.name;
     setGameState((prev) => ({
       ...prev,
-      fishIndex: prev.fishIndex + 1,
-      answersLeft: prev.answersLeft.slice(1),
       points: {
         ...prev.points,
         correct: isCorrect ? prev.points.correct + 1 : prev.points.correct,
@@ -36,8 +17,8 @@ export function FunctionalGameBoard({ setGameState, fishIndex, choice }) {
           ? prev.points.incorrect + 1
           : prev.points.incorrect,
       },
-      choice: "",
     }));
+    setInput("");
   };
 
   return (
@@ -49,16 +30,16 @@ export function FunctionalGameBoard({ setGameState, fishIndex, choice }) {
         id="fish-guess-form"
         onSubmit={(e) => {
           e.preventDefault();
-          handleSubmit(choice);
+          handleSubmit(input);
         }}
       >
         <label htmlFor="fish-guess">What kind of fish is this?</label>
         <input
           type="text"
           name="fish-guess"
-          value={choice}
+          value={input}
           onChange={(e) => {
-            setGameState((prev) => ({ ...prev, choice: e.target.value }));
+            setInput(e.target.value);
           }}
         />
         <input type="submit" />

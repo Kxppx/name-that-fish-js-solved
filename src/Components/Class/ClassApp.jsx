@@ -2,28 +2,32 @@ import { Component } from "react";
 import { ClassScoreBoard } from "./ClassScoreBoard";
 import { ClassGameBoard } from "./ClassGameBoard";
 import { ClassFinalScore } from "./ClassFinalScore";
-import { initialFishes } from "../../data/data";
+import { initialFishes } from "../../constants/fish-data";
 
 export class ClassApp extends Component {
   state = {
-    fishIndex: 0,
-    answersLeft: initialFishes,
     points: { correct: 0, incorrect: 0 },
-    choice: "",
   };
   render() {
-    const { fishIndex, answersLeft, points, choice } = this.state;
+    const {
+      points,
+      points: { correct, incorrect },
+    } = this.state;
+
+    const fishArr = initialFishes.map((fish) => fish.name);
+    const fishIndex = correct + incorrect;
+    const isGameOver = fishIndex === initialFishes.length;
+    const answersLeft = fishArr.slice(fishIndex);
+
     return (
       <>
-        {fishIndex === initialFishes.length ? (
-          <ClassFinalScore points={points} />
-        ) : (
+        {isGameOver && <ClassFinalScore points={points} />}
+        {!isGameOver && (
           <>
             <ClassScoreBoard points={points} answersLeft={answersLeft} />
             <ClassGameBoard
               setGameState={(update) => this.setState(update)}
               fishIndex={fishIndex}
-              choice={choice}
             />
           </>
         )}
